@@ -1,0 +1,34 @@
+#!/bin/bash
+set -euo pipefail
+
+# 容错处理：若 $FIRMWARE 变量为空，回退使用默认搜索路径
+TARGET_DIR="${FIRMWARE:-$(ls -d openwrt/bin/targets/*/* | head -n 1)}"
+
+# 动态匹配生成的 .manifest 文件
+MANIFEST=$(ls "$TARGET_DIR"/*.manifest 2>/dev/null | head -1 || true)
+
+# 提取 OpenClash 版本；增加错误容忍防止找不到版本时触发 set -e 导致工作流中断
+OC_VER=""
+if [ -n "$MANIFEST" ] && [ -f "$MANIFEST" ]; then
+  OC_VER=$(grep luci-app-openclash "$MANIFEST" 2>/dev/null | awk -F" - " '{print $2}' || true)
+fi
+
+FALLBACK_TAG="build-${GITHUB_RUN_NUMBER}"
+if [ -z "$OC_VER" ]; then
+  echo "WARNING: could not extract OpenClash version from manifest, use fallback tag: $FALLBACK_TAG"
+  OC_VER="$FALLBACK_TAG"
+fi
+
+echo "OpenClash version: $OC_VER"
+echo "OPENCLASH_VER=$OC_VER" >> "$GITHUB_ENV"
+echo "release_tag=${OC_VER}" >> "$GITHUB_OUTPUT"
+
+touch release.txt
+echo "## ZN-M2 固件 (OpenClash 版)" > release.txt
+echo "" >> release.txt
+echo "**OpenClash 版本:** \`$OC_VER\`" >> release.txt
+echo "" >> release.txt
+echo "### 固件说明" >> release.txt
+echo "- 核心内核与 luci-app-openclash 已内置" >> release.txt
+echo "- 详细包信息请查看 manifest 文件" >> release.txt
+echo "release_name=ZN-M2 OpenClash ${OC_VER}" >> "$GITHUB_OUTPUT"
