@@ -9,9 +9,7 @@ sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/share/boost "$AGENT_TOOLSDIREC
 echo "==> 更新系统软件源并安装 OpenWrt 编译必须的基础依赖..."
 sudo apt-get update
 sudo apt-get install -y \
-  build-essential clang flex bison g++ gawk gcc-multilib g++-multilib \
-  gettext git libncurses5-dev libssl-dev python3-distutils rsync unzip zlib1g-dev \
-  file wget swig libelf-dev libfuse-dev upx subversion lua5.1 liblua5.1-0-dev rename pigz
+  build-essential asciidoc binutils bcc bzip2 gawk gettext git libncurses5-dev libz-dev patch python3 python3-setuptools rsync subversion unzip zlib1g-dev libssl-dev libgmp-dev libmpc-dev libmpfr-dev file wget curl swig libelf-dev libfuse-dev upx lua5.1 liblua5.1-0-dev rename pigz clang flex bison g++-multilib
 
 sudo apt-get autoremove -y --purge
 sudo apt-get clean
