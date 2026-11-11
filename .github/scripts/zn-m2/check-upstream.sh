@@ -2,7 +2,6 @@
 set -euo pipefail
 SHOULD_BUILD=false
 
-# 检查 OpenClash 仓库的最新 Release 标签
 LATEST_OC=$(gh release list -R vernesong/OpenClash -L 1 --json tagName -q '.[0].tagName' || echo "")
 LATEST_TAG=$(gh release list -R "$GITHUB_REPOSITORY" -L 1 --json tagName -q '.[0].tagName' || echo "")
 
