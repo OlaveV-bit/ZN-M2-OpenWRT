@@ -100,7 +100,12 @@ jobs:
       run: |
         cd openwrt
         make defconfig
-        echo "$(nproc) thread compile"
+        echo "==> 优先编译依赖工具链与 host 工具 (预置 po2lmo 等编译工具)..."
+        make tools/compile -j$(nproc) || make tools/compile -j1 V=s
+        make toolchain/compile -j$(nproc) || make toolchain/compile -j1 V=s
+        make package/luci-base/host/compile -j$(nproc) || make package/luci-base/host/compile -j1 V=s
+        
+        echo "==> 开始全量固件编译 ($(nproc) 线程)..."
         make -j$(nproc) || make -j1 V=s
 
     - name: Organize firmware files
