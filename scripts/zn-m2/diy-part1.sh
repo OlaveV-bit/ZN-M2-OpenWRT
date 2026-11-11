@@ -1,6 +1,10 @@
 #!/bin/bash
 set -euo pipefail
 
+# =========================================================
+# OpenWrt DIY script part 1 (Before Update feeds)
+# =========================================================
+
 echo "正在获取 OpenClash 最新正式 Release 标签..."
 API_URL="https://api.github.com/repos/vernesong/OpenClash/releases/latest"
 
