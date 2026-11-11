@@ -2,6 +2,7 @@
 set -euo pipefail
 
 TARGET_DIR="${FIRMWARE:-$(ls -d openwrt/bin/targets/*/* | head -n 1)}"
+
 MANIFEST=$(ls "$TARGET_DIR"/*.manifest 2>/dev/null | head -1 || true)
 
 OC_VER=""
@@ -9,7 +10,7 @@ if [ -n "$MANIFEST" ] && [ -f "$MANIFEST" ]; then
   OC_VER=$(grep luci-app-openclash "$MANIFEST" 2>/dev/null | awk -F" - " '{print $2}' || true)
 fi
 
-# 强行剥离版本号中的 -beta 尾缀
+# 核心：强行剥离版本号中的 -beta 尾缀
 OC_VER=$(echo "$OC_VER" | sed 's/-beta//g')
 
 FALLBACK_TAG="build-${GITHUB_RUN_NUMBER}"
