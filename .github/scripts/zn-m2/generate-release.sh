@@ -2,7 +2,6 @@
 set -euo pipefail
 
 TARGET_DIR="${FIRMWARE:-$(ls -d openwrt/bin/targets/*/* | head -n 1)}"
-
 MANIFEST=$(ls "$TARGET_DIR"/*.manifest 2>/dev/null | head -1 || true)
 
 OC_VER=""
@@ -10,12 +9,11 @@ if [ -n "$MANIFEST" ] && [ -f "$MANIFEST" ]; then
   OC_VER=$(grep luci-app-openclash "$MANIFEST" 2>/dev/null | awk -F" - " '{print $2}' || true)
 fi
 
-# 核心：强行将版本号中的 -beta 替换为空
+# 强行剥离版本号中的 -beta 尾缀
 OC_VER=$(echo "$OC_VER" | sed 's/-beta//g')
 
 FALLBACK_TAG="build-${GITHUB_RUN_NUMBER}"
 if [ -z "$OC_VER" ]; then
-  echo "WARNING: could not extract OpenClash version from manifest, use fallback tag: $FALLBACK_TAG"
   OC_VER="$FALLBACK_TAG"
 fi
 
@@ -24,7 +22,7 @@ echo "OPENCLASH_VER=$OC_VER" >> "$GITHUB_ENV"
 echo "release_tag=${OC_VER}" >> "$GITHUB_OUTPUT"
 
 touch release.txt
-echo "## ZN-M2 固件 (OpenClash 版)" > release.txt
+echo "## ZN-M2 固件 (OpenClash 正式版)" > release.txt
 echo "" >> release.txt
 echo "**OpenClash 版本:** \`$OC_VER\`" >> release.txt
 echo "" >> release.txt
