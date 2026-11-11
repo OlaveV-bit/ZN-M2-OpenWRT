@@ -12,11 +12,11 @@ sed -i "s/DISTRIB_DESCRIPTION='*.*'/DISTRIB_DESCRIPTION='OpenWrt IPQ6000 ZN-M2 (
 sed -i -r "s#navbar_proxy = 'passwall'#navbar_proxy = 'openclash'#g" feeds/luci/themes/luci-theme-design/luasrc/view/themes/design/header.htm || true
 
 # ---------------------------------------------------------
-# 核心：强制去除 OpenClash 版本号中的 -beta 后缀，使其显示为正式版
+# 核心：强制去除 OpenClash 版本号中的 -beta 后缀，使其显示为正式版[cite: 21]
 # ---------------------------------------------------------
 if [ -d "feeds/openclash" ]; then
-  echo "正在清理 OpenClash 版本号中的 -beta 标识..."
-  find feeds/openclash -type f \( -name "Makefile" -o -name "*.lua" -o -name "*.b64" \) -exec sed -i 's/-beta//g' {} + || true
+  echo "正在清理 OpenClash 版本号中的 -beta 标识..."[cite: 21]
+  find feeds/openclash -type f \( -name "Makefile" -o -name "*.lua" -o -name "*.b64" \) -exec sed -i 's/-beta//g' {} + || true[cite: 21]
 fi
 
 # ---------------------------------------------------------
