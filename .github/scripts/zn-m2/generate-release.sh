@@ -10,6 +10,9 @@ if [ -n "$MANIFEST" ] && [ -f "$MANIFEST" ]; then
   OC_VER=$(grep luci-app-openclash "$MANIFEST" 2>/dev/null | awk -F" - " '{print $2}' || true)
 fi
 
+# 核心：强行将版本号中的 -beta 替换为空
+OC_VER=$(echo "$OC_VER" | sed 's/-beta//g')
+
 FALLBACK_TAG="build-${GITHUB_RUN_NUMBER}"
 if [ -z "$OC_VER" ]; then
   echo "WARNING: could not extract OpenClash version from manifest, use fallback tag: $FALLBACK_TAG"
