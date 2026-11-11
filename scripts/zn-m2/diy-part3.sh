@@ -12,6 +12,14 @@ sed -i "s/DISTRIB_DESCRIPTION='*.*'/DISTRIB_DESCRIPTION='OpenWrt IPQ6000 ZN-M2 (
 sed -i -r "s#navbar_proxy = 'passwall'#navbar_proxy = 'openclash'#g" feeds/luci/themes/luci-theme-design/luasrc/view/themes/design/header.htm || true
 
 # ---------------------------------------------------------
+# 核心：强制去除 OpenClash 版本号中的 -beta 后缀，使其显示为正式版
+# ---------------------------------------------------------
+if [ -d "feeds/openclash" ]; then
+  echo "正在清理 OpenClash 版本号中的 -beta 标识..."
+  find feeds/openclash -type f \( -name "Makefile" -o -name "*.lua" -o -name "*.b64" \) -exec sed -i 's/-beta//g' {} + || true
+fi
+
+# ---------------------------------------------------------
 # 修复重启/冷启动网口握手慢导致偶尔获取不到 IP 的问题
 # ---------------------------------------------------------
 mkdir -p package/base-files/files/etc/init.d
