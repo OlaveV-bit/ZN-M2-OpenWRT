@@ -3,25 +3,22 @@ on:
   schedule:
     - cron: '23 19 * * *'   # Daily at 03:23 CST
   workflow_dispatch:
-
 defaults:
   run:
     shell: bash -euo pipefail {0}
-
 permissions:
   contents: write
   actions: write
-
 env:
   REPO_URL: https://github.com/openwrt-fork/sdf8057-ipq6000.git
   REPO_BRANCH: master
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: ./config/zn-m2.config
-  DIY_P1_SH: .github/scripts/zn-m2/diy-part1.sh
-  DIY_P2_SH: .github/scripts/zn-m2/diy-part2.sh
-  DIY_P3_SH: .github/scripts/zn-m2/diy-part3.sh
+  # diy脚本在根目录scripts，其余工具脚本在.github/scripts
+  DIY_P1_SH: scripts/zn-m2/diy-part1.sh
+  DIY_P2_SH: scripts/zn-m2/diy-part2.sh
+  DIY_P3_SH: scripts/zn-m2/diy-part3.sh
   TZ: Asia/Shanghai
-
 jobs:
   check:
     if: github.event_name == 'schedule'
@@ -35,7 +32,6 @@ jobs:
       env:
         GH_TOKEN: ${{ github.token }}
       run: bash .github/scripts/zn-m2/check-upstream.sh
-
   build:
     needs: check
     if: |
@@ -45,18 +41,15 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v7
-
     - name: Setup build environment
       env:
         DEBIAN_FRONTEND: noninteractive
       run: bash .github/scripts/zn-m2/setup-env.sh
-
     - name: Clone source code
       working-directory: /workdir
       run: |
         git clone $REPO_URL -b $REPO_BRANCH openwrt
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
-
     - name: Restore ccache cache
       uses: actions/cache@v4
       with:
@@ -64,7 +57,6 @@ jobs:
         key: openwrt-ccache-znm2-${{ github.run_id }}
         restore-keys: |
           openwrt-ccache-znm2-
-
     - name: Load custom feeds
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -72,22 +64,18 @@ jobs:
         [ -e "$FEEDS_CONF" ] && cp "$FEEDS_CONF" openwrt/feeds.conf.default
         cd openwrt
         bash "$GITHUB_WORKSPACE/$DIY_P1_SH"
-
     - name: Update feeds
       run: cd openwrt && ./scripts/feeds update -a
-
     - name: Modify & Install feeds
       run: |
         cd openwrt
         bash "$GITHUB_WORKSPACE/$DIY_P2_SH"
-
     - name: Load custom configuration
       run: |
         [ -e files ] && cp -r files openwrt/files || true
         [ -e "$CONFIG_FILE" ] && cp "$CONFIG_FILE" openwrt/.config
         cd openwrt
         bash "$GITHUB_WORKSPACE/$DIY_P3_SH"
-
     - name: Download packages (with retry)
       run: |
         cd openwrt
@@ -95,7 +83,6 @@ jobs:
         export DOWNLOAD_ARGS="--retry-connrefused --waitretry=10 --max-retries=5"
         make download -j8
         find dl -size -1024c -exec rm -f {} \;
-
     - name: Build firmware
       run: |
         cd openwrt
@@ -107,14 +94,11 @@ jobs:
         
         echo "==> 开始全量固件编译 ($(nproc) 线程)..."
         make -j$(nproc) || make -j1 V=s
-
     - name: Organize firmware files
       run: bash .github/scripts/zn-m2/organize-firmware.sh
-
     - name: Generate release info
       id: tag
       run: bash .github/scripts/zn-m2/generate-release.sh
-
     - name: Upload firmware to release
       uses: softprops/action-gh-release@v3
       if: success()
@@ -125,7 +109,6 @@ jobs:
         tag_name: ${{ steps.tag.outputs.release_tag }}
         body_path: release.txt
         files: /tmp/release-firmware/*
-
     - name: Delete old workflow runs
       if: success()
       uses: ophub/delete-releases-workflows@v0.1.0
