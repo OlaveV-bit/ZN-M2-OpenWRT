@@ -14,7 +14,7 @@ sudo apt-get install -y \
   git git-core python3 python3-pip python3-ply python3-docutils python3-setuptools \
   haveged libglib2.0-dev libgmp3-dev libltdl-dev libmpc-dev libmpfr-dev libncurses5-dev \
   libncursesw5-dev libreadline-dev libssl-dev libtool lrzsz mkisofs msmtp nano \
-  ninja-build p7zip p7zip-full patch pkgconf python3-git python3-ply rsync \
+  ninja-build p7zip p7zip-full patch pkgconf python3-git rsync \
   scons squashfs-tools subversion swig texinfo u-boot-tools upx-ucl unzip vim wget \
   xmlto zlib1g-dev rename pigz clang libfuse-dev lua5.1 liblua5.1-0-dev g++-multilib
 
