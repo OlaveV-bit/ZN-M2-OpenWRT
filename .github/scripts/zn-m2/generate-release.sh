@@ -1,13 +1,10 @@
 #!/bin/bash
 set -euo pipefail
 
-# 容错处理：若 $FIRMWARE 变量为空，回退使用默认搜索路径
 TARGET_DIR="${FIRMWARE:-$(ls -d openwrt/bin/targets/*/* | head -n 1)}"
 
-# 动态匹配生成的 .manifest 文件
 MANIFEST=$(ls "$TARGET_DIR"/*.manifest 2>/dev/null | head -1 || true)
 
-# 提取 OpenClash 版本；增加错误容忍防止找不到版本时触发 set -e 导致工作流中断
 OC_VER=""
 if [ -n "$MANIFEST" ] && [ -f "$MANIFEST" ]; then
   OC_VER=$(grep luci-app-openclash "$MANIFEST" 2>/dev/null | awk -F" - " '{print $2}' || true)
