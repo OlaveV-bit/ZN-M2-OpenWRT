@@ -54,7 +54,8 @@ jobs:
       uses: actions/cache@v4
       with:
         path: openwrt/.ccache
-        key: openwrt-ccache-znm2-${{ github.run_id }}
+        # 核心优化：绑定动态 run_number 与 sha，防止旧编译对象污染 OpenClash 最新源码
+        key: openwrt-ccache-znm2-${{ github.run_number }}-${{ github.sha }}
         restore-keys: |
           openwrt-ccache-znm2-
     - name: Load custom feeds
