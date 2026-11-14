@@ -12,9 +12,8 @@ else
   echo "src-git openclash https://github.com/vernesong/OpenClash.git;master" >> feeds.conf.default
 fi
 
-# 核心：直接在这里把 openwrt 源码目录下的 feeds/openclash 删掉
-# 这样在后面执行 ./scripts/feeds update 时，它就会强制从 GitHub 克隆最新的 master 源码
-if [ -d "openwrt/feeds/openclash" ]; then
+# 核心修正：因为当前工作目录已经是 openwrt 源码根目录，直接清理 feeds/openclash
+if [ -d "feeds/openclash" ]; then
   echo "清理旧的 OpenClash feeds 缓存..."
-  rm -rf openwrt/feeds/openclash
+  rm -rf feeds/openclash
 fi
