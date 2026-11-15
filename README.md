@@ -73,27 +73,6 @@
 
 ---
 
-## 自动化编译流程说明
-
-工作流配置文件位于 `.github/workflows/zn-m2.yml`，完整构建链路如下：
-
-1. **触发条件**：
-   - **定时触发**：每天北京时间 **03:23**（UTC `19:23`）自动检查上游并触发编译。
-   - **手动触发**：随时在仓库页面手动点击运行。
-2. **环境与源码准备**：
-   - 在 `ubuntu-22.04` 宿主机清理 `.NET`、`GHC`、`Boost` 等预装环境，安装完整编译链并初始化 `/workdir`。
-   - 克隆 `sdf8057-ipq6000` 源码并应用 `feeds.conf.default`。
-3. **三阶段 DIY 定制**：
-   - `diy-part1.sh`：配置并校验 `vernesong/OpenClash` 的 `master` 分支源。
-   - `diy-part2.sh`：拉取 `sbwml/packages_lang_golang` (`22.x`) 替换原生 Go 环境，强制覆盖安装最新版 `luci-app-openclash`。
-   - `diy-part3.sh`：写入构建日期至 `/etc/openwrt_release`，替换 OpenClash 源码中的 `-beta` 标识，写入 `/etc/init.d/network_fix` 开机网口重载脚本。
-4. **分步编译与容错**：
-   - 优先单/多线程编译 `tools`、`toolchain` 及 `luci-base/host`（确保 `po2lmo` 等语言工具就绪），随后进行全量固件多线程编译（若多线程报错自动回退 `-j1 V=s` 输出详细日志）。
-5. **打包发布**：
-   - 剔除精简测试包（`*-basic*`），提取 `.manifest` 中的 OpenClash 版本号作为 Release Tag，自动创建并上传固件至 **Releases**。
-
----
-
 ## 如何部署到自己的仓库 (Fork 指南)
 
 如果你希望使用自己的 GitHub 账号托管并自动编译此固件：
