@@ -1,9 +1,5 @@
 # 兆能 M2 (ZN-M2) OpenWrt 云编译项目
 
-[![Build Status](https://img.shields.io/github/actions/workflow/status/你的用户名/你的仓库名/zn-m2.yml?label=ZN-M2%20Build&style=flat-square)](../../actions/workflows/zn-m2.yml)
-[![Latest Release](https://img.shields.io/github/v/release/你的用户名/你的仓库名?label=OpenClash%20Release&style=flat-square)](../../releases)
-[![OpenWrt](https://img.shields.io/badge/OpenWrt-21.02%20(IPQ6000)-blue?style=flat-square)](https://github.com/openwrt-fork/sdf8057-ipq6000)
-
 本项目基于 GitHub Actions 自动化云编译 **兆能 M2 (ZN-M2 / IPQ6000)** 专属 OpenWrt 固件，深度集成最新主线版 **OpenClash**、高通 **QCA NSS 硬件加速** 以及常用网络运维工具，支持每日定时自动追踪上游更新并发布至 GitHub Releases。
 
 ---
