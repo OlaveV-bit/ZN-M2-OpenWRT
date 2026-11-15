@@ -129,20 +129,6 @@
 
 ---
 
-## 二次开发与自定义配置
-
-- **增减软件包**：
-  编辑 `config/zn-m2.config` 文件。建议在本地同源环境中运行 `make menuconfig` 勾选所需插件后，执行 `./scripts/diffconfig.sh > zn-m2.config` 导出精简配置进行替换。
-- **预置自定义文件（如默认 Wi-Fi、LAN 网段、OpenClash 订阅配置）**：
-  在仓库根目录新建 `files/` 文件夹，按 OpenWrt 根目录层级放入文件即可。例如：
-  - `files/etc/config/network`（自定义默认 IP 地址）
-  - `files/etc/openclash/config/config.yaml`（预置节点配置文件）
-  工作流在编译前会自动将 `files/` 目录合并覆盖到源码根目录。
-- **调整编译参数或源码仓库**：
-  直接修改 `.github/workflows/zn-m2.yml` 顶部的 `env` 环境变量（如 `REPO_URL`、`REPO_BRANCH`、`cron` 定时时间等）。
-
----
-
 ## 上游源码与致谢
 
 - **OpenWrt IPQ6000 源码**：[openwrt-fork/sdf8057-ipq6000](https://github.com/openwrt-fork/sdf8057-ipq6000)
